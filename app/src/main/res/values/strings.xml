@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Simple Calculator</string>
+    <string name="sun_image">Sun Image</string>
+    <string name="crescent_image">Crescent Image</string>
+</resources>
