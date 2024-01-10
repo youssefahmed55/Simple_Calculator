@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.simple_calculator"
+    namespace = "com.calculatooor.simple_calculator"
     compileSdk = 34
 
     defaultConfig {
