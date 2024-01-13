@@ -28,6 +28,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -44,6 +46,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.calculatooor.simple_calculator.R
 import com.calculatooor.simple_calculator.ui.theme.Simple_CalculatorTheme
 import com.calculatooor.simple_calculator.viewmodel.CalcViewModel
@@ -53,21 +56,15 @@ import ir.kaaveh.sdpcompose.ssp
 
 @Preview(showSystemUi = true, device = "id:pixel_6")
 @Composable
-fun MainScreen(viewModel: CalcViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun MainScreen(viewModel: CalcViewModel = viewModel()) {
     val isD = isSystemInDarkTheme()
     val isDark = remember {
          mutableStateOf(isD)
     }
 
     Simple_CalculatorTheme(darkTheme = isDark.value) {
-        val textValue = remember {
-            viewModel.expression
-        }
-
-        val errorValue = remember {
-            viewModel.error
-        }
-
+        val textState by viewModel.expressionState.collectAsState()
+        val errorState by viewModel.errorState.collectAsState()
 
         Column(
             modifier = Modifier
@@ -77,9 +74,9 @@ fun MainScreen(viewModel: CalcViewModel = androidx.lifecycle.viewmodel.compose.v
         ) {
             LightAndDartCard(modifier = Modifier.align(Alignment.CenterHorizontally),isDark)
 
-            CalcText(textValue, errorValue,isDark)
+            CalcText(textState, errorState,isDark)
 
-            CalcTools(textValue, viewModel,isDark)
+            CalcTools(textState, viewModel,isDark)
         }
     }
 }
@@ -87,7 +84,7 @@ fun MainScreen(viewModel: CalcViewModel = androidx.lifecycle.viewmodel.compose.v
 
 
 @Composable
-fun CalcTools(text: MutableState<String>, viewModel: CalcViewModel, isDark: MutableState<Boolean>) {
+fun CalcTools(text: String, viewModel: CalcViewModel, isDark: MutableState<Boolean>) {
     Card(colors = CardDefaults.cardColors(containerColor = if (isDark.value) colorResource(
         id = R.color.Gunmetal
     ) else colorResource(id = R.color.SeaSalt)),
@@ -110,7 +107,7 @@ fun CalcTools(text: MutableState<String>, viewModel: CalcViewModel, isDark: Muta
               ButtonTool(isDark,"AC",13.ssp, colorResource(id = R.color.green)){viewModel.clearAll()}
           }
            item {
-               ButtonTool(isDark, "C", 13.ssp, colorResource(id = R.color.green)){if(text.value.isNotEmpty())viewModel.clear()}
+               ButtonTool(isDark, "C", 13.ssp, colorResource(id = R.color.green)){if(text.isNotEmpty())viewModel.clear()}
            }
            item {
                ButtonTool(isDark, "%", 13.ssp, colorResource(id = R.color.green)){viewModel.parseText("%") }
@@ -164,7 +161,7 @@ fun CalcTools(text: MutableState<String>, viewModel: CalcViewModel, isDark: Muta
                ButtonTool(isDark, ".", 13.ssp){viewModel.parseText(".")}
            }
            item {
-               ButtonTool(isDark, "=", 18.ssp, colorResource(id = R.color.red)){if (text.value.isNotEmpty())viewModel.getResult(text.value)}
+               ButtonTool(isDark, "=", 18.ssp, colorResource(id = R.color.red)){if (text.isNotEmpty())viewModel.getResult(text)}
            }
 
 
@@ -202,14 +199,14 @@ fun ButtonTool(
 
 @Composable
 fun CalcText(
-    text: MutableState<String>,
-    errorValue: MutableState<String>,
+    text: String,
+    errorValue: String,
     isDark: MutableState<Boolean>
 ) {
     Column {
         BasicTextField(value = TextFieldValue(
-            text = text.value,
-            selection = TextRange(text.value.length) // TextRange(0, textValue.length) -> Select that text in a color
+            text = text,
+            selection = TextRange(text.length) // TextRange(0, textValue.length) -> Select that text in a color
         ), onValueChange = {},textStyle = TextStyle.Default.copy(color = if (isDark.value) Color.White else Color.Black, fontSize = 25.ssp, fontWeight = FontWeight.Bold, textAlign = TextAlign.End),modifier = Modifier
             .fillMaxWidth()
             .padding(start = 10.sdp, end = 10.sdp)
@@ -217,8 +214,8 @@ fun CalcText(
         )
         Spacer(modifier = Modifier.padding(2.sdp))
         BasicTextField(value = TextFieldValue(
-            text = errorValue.value,
-            selection = TextRange(errorValue.value.length)  // TextRange(0, textValue.length) -> Select that text in a color
+            text = errorValue,
+            selection = TextRange(errorValue.length)  // TextRange(0, textValue.length) -> Select that text in a color
         ), onValueChange = {},textStyle = TextStyle.Default.copy(color = Color.Red, fontSize = 15.ssp, fontWeight = FontWeight.Bold, textAlign = TextAlign.End),modifier = Modifier
             .fillMaxWidth()
             .padding(start = 10.sdp, end = 10.sdp)

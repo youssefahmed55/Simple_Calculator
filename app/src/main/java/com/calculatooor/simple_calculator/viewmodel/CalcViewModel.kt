@@ -1,37 +1,45 @@
 package com.calculatooor.simple_calculator.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
+
 import androidx.lifecycle.ViewModel
 import com.calculatooor.simple_calculator.util.CalcUtil
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+
+
 
 class CalcViewModel : ViewModel() {
 
-    val expression = mutableStateOf("")
-    val error = mutableStateOf("")
+    private val _expressionState = MutableStateFlow("")
+    val expressionState = _expressionState.asStateFlow()
+
+    private val _errorState = MutableStateFlow("")
+    val errorState = _errorState.asStateFlow()
 
 
 
     fun getResult(txt: String){
         try {
-            expression.value = CalcUtil.eval(txt).toString()
+            _expressionState.update { CalcUtil.eval(txt).toString() }
         }catch (e: Exception){
-            error.value = e.message.toString()
+            _errorState.update { e.message.toString() }
         }
     }
 
     fun parseText(char:String){
-        expression.value += char
-        error.value = ""
+        _expressionState.update { expressionState.value + char }
+        _errorState.update {""}
     }
 
     fun clear(){
-        expression.value = expression.value.substring(0,expression.value.length-1)
-        error.value = ""
+        _expressionState.update { _expressionState.value.substring(0,_expressionState.value.length-1)}
+        _errorState.update {""}
     }
 
     fun clearAll(){
-        expression.value = ""
-        error.value = ""
+        _expressionState.update {""}
+        _errorState.update {""}
     }
 
 
