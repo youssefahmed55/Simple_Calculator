@@ -11,6 +11,8 @@ Created With Jetpack Compose To Calculate Simple Operations Like + , - , * , % A
 
 - Apk : https://www.mediafire.com/file/fbs4cge8vfig3g2/Simple+Calculator.apk/file
 
+- Google Play : https://play.google.com/store/apps/details?id=com.calculatooor.simple_calculator
+
 - Contact : youssefahmed505505@gmail.com or joussefahmed2012@gmail.com
 
 
