@@ -18,7 +18,13 @@
           <timeTargetWasSelectedWithDropDown value="2024-01-10T02:25:29.906124900Z" />
         </State>
       </entry>
+      <entry key="MainScreenKtTest (1)">
+        <State />
+      </entry>
       <entry key="app">
+        <State />
+      </entry>
+      <entry key="enterNumbersAndClickOnAC_showsEmptyResultOrText()">
         <State />
       </entry>
     </value>

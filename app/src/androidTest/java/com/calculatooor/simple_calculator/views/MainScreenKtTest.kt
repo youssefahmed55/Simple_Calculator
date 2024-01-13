@@ -449,6 +449,48 @@ class MainScreenKtTest{
 
     }
 
+    @Test
+    fun enterNumbersAndClickOnAC_showsEmptyResultOrText() {
+
+        composeTestRule.setContent {
+            Simple_CalculatorTheme {
+                MainScreen()
+            }
+        }
+
+        composeTestRule.onNode(hasText("2") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("6") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("7") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("4") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("5") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("5") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("0") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("AC") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasTestTag("RESULT")).assertExists("")
+        composeTestRule.onNode(hasTestTag("ERROR")).assertExists("")
+    }
+
+    @Test
+    fun enterNumbersAndClickOnC_removesLastCharacter() {
+
+        composeTestRule.setContent {
+            Simple_CalculatorTheme {
+                MainScreen()
+            }
+        }
+
+        composeTestRule.onNode(hasText("2") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("6") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("7") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("4") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("5") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("5") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("0") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasText("C") and hasClickAction()).performClick()
+        composeTestRule.onNode(hasTestTag("RESULT")).assertExists("267455")
+        composeTestRule.onNode(hasTestTag("ERROR")).assertExists("")
+    }
+
 
 
 
